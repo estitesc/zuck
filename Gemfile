@@ -3,7 +3,7 @@ source "http://rubygems.org"
 ruby "2.1.2"
 
 gem "bundler"
-gem "koala", "~>1.6.0"
+gem "koala"
 gem "activesupport"
 
 group :development do
