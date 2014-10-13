@@ -1,30 +1,27 @@
-require 'spec_helper'
+require "spec_helper"
 
-class KMTest
-  extend Zuck::KoalaMethods
-end
-
-describe Zuck::KoalaMethods do
-  describe "assigning a graph instance" do
-
-    it "raises when not a Koala instance" do
+describe Zuck::KoalaMethods, "#graph" do
+  context "instantiated with improper class" do
+    it "raises a incorrect class error message" do
       expect{
-        KMTest.graph = :something_else
-      }.to raise_error "Symbol is not a Koala::Facebook::API"
-      KMTest.graph.should be_nil
+        Zuck.graph = Struct.new(:params)
+      }.to raise_error(Zuck::Error::InvalidClass)
     end
+  end
 
-    it "raises when not a Koala instance" do
+  context "instantiated without an access token" do
+    it "raises a missing token error message" do
       expect{
-        KMTest.graph = Koala::Facebook::API.new()
-      }.to raise_error
-      KMTest.graph.should be_nil
+        Zuck.graph = Koala::Facebook::API.new('')
+      }.to raise_error(Zuck::Error::MissingToken)
     end
+  end
 
-    it "that's valid" do
-      KMTest.graph.should be_nil
-      KMTest.graph = Koala::Facebook::API.new(:some_token)
-      KMTest.graph.should_not be_nil
+  context "with proper class and access token" do
+    it "instantiates a new instance of a graph" do
+      expect{
+        Zuck.graph = Koala::Facebook::API.new('test_token')
+      }.not_to raise_error
     end
   end
 end
